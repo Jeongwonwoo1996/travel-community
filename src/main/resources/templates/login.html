@@ -4,9 +4,21 @@
   <title>Login</title>
 </head>
 <body>
+<h1>Login</h1>
+
+<!-- 성공 메시지 -->
+<div th:if="${param.success}">
+  <p style="color: green;">Login successful! Welcome back!</p>
+</div>
+
+<!-- 실패 메시지 -->
+<div th:if="${param.error}">
+  <p style="color: red;">Invalid email or password</p>
+</div>
+
 <form th:action="@{/login}" method="post">
-  <label>Username:</label>
-  <input type="text" name="username" required>
+  <label>Email:</label>
+  <input type="email" name="username" required>
   <br>
   <label>Password:</label>
   <input type="password" name="password" required>
