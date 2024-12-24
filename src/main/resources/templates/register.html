@@ -1,39 +1,219 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Register</title>
+  <title>회원가입</title>
+  <style>
+    /* 전체 배경 및 폰트 설정 */
+    body {
+      font-family: "Apple SD Gothic Neo", sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      /* 좌→우 그라디언트 배경 (로그인 페이지와 동일) */
+      background: linear-gradient(to right, #74b9ff, #a29bfe);
+    }
+
+    /* 폼 컨테이너 스타일 */
+    .form-container {
+      background-color: #ffffff;
+      /* 기존보다 패딩과 border-radius를 줄여 더 콤팩트하게 */
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* 제목 스타일 */
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px; /* 기존 30px → 20px로 축소 */
+      font-size: 1.6em;    /* 기존 1.8em → 1.6em로 축소 */
+    }
+
+    /* 공통 라벨 스타일 */
+    .form-container label {
+      font-weight: 600;
+      margin-top: 10px; /* 기존 15px → 10px로 축소 */
+      display: block;
+      font-size: 0.9em; /* 약간 줄인 폰트 크기 */
+    }
+
+    /* 입력 필드 스타일 */
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container input[type="password"],
+    .form-container input[type="date"],
+    .form-container select {
+      width: 100%;
+      /* 상하좌우 패딩 축소 (기존 12px → 10px) */
+      padding: 10px;
+      margin-top: 4px; /* 기존 5px → 4px */
+      border: 1px solid #ccc;
+      border-radius: 5px; /* 기존 6px → 5px */
+      box-sizing: border-box;
+      font-size: 0.85em; /* 기존 0.9em → 0.85em */
+    }
+
+    /* 성별 라디오 버튼 묶음 */
+    .gender-options {
+      margin-top: 4px; /* 기존 5px → 4px */
+    }
+    .gender-options label {
+      font-weight: normal;
+      margin-right: 15px;
+      font-size: 0.85em; /* 라벨도 함께 축소 */
+    }
+
+    /* 가입 버튼 스타일 */
+    .form-container button {
+      width: 100%;
+      /* 상하좌우 패딩 축소 (기존 14px 0 → 10px 0) */
+      padding: 10px 0;
+      margin-top: 15px; /* 기존 25px → 15px */
+      background-color: #0984e3;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px; /* 기존 6px → 5px */
+      font-size: 0.95em;  /* 기존 1em → 0.95em */
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .form-container button:hover {
+      background-color: #74b9ff; /* 호버 시 색상 변화 */
+    }
+
+    /* 에러/성공 메시지 표시용 (필요하다면 활용) */
+    .msg {
+      text-align: center;
+      margin-top: 10px; /* 기존 15px → 10px */
+    }
+    .msg.success {
+      color: green;
+      font-weight: 600;
+    }
+    .msg.error {
+      color: red;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-<h1>Register</h1>
-<form th:action="@{/register}" method="post">
-  <label>Username:</label>
-  <input type="text" name="username" required>
-  <br>
-  <label>Email:</label>
-  <input type="email" name="email" required>
-  <br>
-  <label>Password:</label>
-  <input type="password" name="password" required>
-  <br>
-  <label>Phone Number:</label>
-  <input type="text" name="phoneNumber">
-  <br>
-  <label>Date of Birth:</label>
-  <input type="date" name="dateOfBirth">
-  <br>
-  <label>Gender:</label>
-  <input type="text" name="gender">
-  <br>
-  <label>Country:</label>
-  <input type="text" name="country">
-  <br>
-  <label>Preferred Language:</label>
-  <input type="text" name="preferredLanguage">
-  <br>
-  <label>Travel Interests:</label>
-  <input type="text" name="travelInterests">
-  <br>
-  <button type="submit">Register</button>
-</form>
+<div class="form-container">
+  <h1>회원가입</h1>
+
+  <!--
+    에러 또는 성공 메시지를 표시하고 싶다면, 아래 블록을 활용하세요.
+    <div th:if="${param.error}" class="msg error">
+      <p th:text="${param.error}"></p>
+    </div>
+    <div th:if="${param.success}" class="msg success">
+      <p th:text="${param.success}"></p>
+    </div>
+  -->
+
+  <!-- 회원가입 폼 (Thymeleaf action 매핑 주의) -->
+  <form th:action="@{/register}" method="post">
+
+    <label for="username">사용자 이름</label>
+    <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="사용자 이름을 입력하세요"
+            required
+    />
+
+    <label for="email">이메일</label>
+    <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="예) example@domain.com"
+            required
+    />
+
+    <label for="password">비밀번호</label>
+    <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="비밀번호를 입력하세요"
+            required
+    />
+
+    <label for="phoneNumber">전화번호</label>
+    <input
+            type="text"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="(선택) 예) +82-10-1234-5678"
+    />
+
+    <label for="dateOfBirth">생년월일</label>
+    <input
+            type="date"
+            id="dateOfBirth"
+            name="dateOfBirth"
+            placeholder="YYYY-MM-DD"
+    />
+
+    <label>성별</label>
+    <div class="gender-options">
+      <label>
+        <input
+                type="radio"
+                name="gender"
+                value="M"
+                required
+        /> 남성
+      </label>
+      <label>
+        <input
+                type="radio"
+                name="gender"
+                value="F"
+        /> 여성
+      </label>
+      <label>
+        <input
+                type="radio"
+                name="gender"
+                value="O"
+        /> 기타
+      </label>
+    </div>
+
+    <label for="country">국가</label>
+    <input
+            type="text"
+            id="country"
+            name="country"
+            placeholder="(선택) 예) 대한민국"
+    />
+
+    <label for="preferredLanguage">선호 언어</label>
+    <input
+            type="text"
+            id="preferredLanguage"
+            name="preferredLanguage"
+            placeholder="(선택) 예) 한국어"
+    />
+
+    <label for="travelInterests">여행 관심사</label>
+    <input
+            type="text"
+            id="travelInterests"
+            name="travelInterests"
+            placeholder="(선택) 예) 배낭여행, 미식 투어"
+    />
+
+    <button type="submit">회원가입</button>
+  </form>
+</div>
 </body>
 </html>

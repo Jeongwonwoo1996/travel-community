@@ -4,7 +4,7 @@ import com.example.travelcommunity.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,35 +26,27 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register").permitAll() // 로그인, 회원가입은 인증 불필요
-                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                        .requestMatchers("/login","/login/submit", "/register").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/login?success=true", true) // 항상 성공 메시지를 포함한 리디렉션
-                        .failureUrl("/login?error=true") // 실패 시 error 파라미터 추가
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login") // 로그아웃 후 로그인 페이지로 이동
+                        .loginProcessingUrl("/login/submit") // POST 요청 처리
+//                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
+                        .usernameParameter("email") // email로 사용자 인증
+                        .passwordParameter("password")
                         .permitAll()
                 );
         return http.build();
     }
 }
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화
-//                .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().permitAll() // 모든 요청 허용
-//                );
-//        return http.build();
-//    }
-

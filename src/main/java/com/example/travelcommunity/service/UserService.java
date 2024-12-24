@@ -14,22 +14,13 @@ public class UserService {
     }
 
     public void registerUser(User user) {
+
+        // (선택) DB에 저장할 기본 ROLE 설정
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
+
         userMapper.insertUser(user);
     }
 
-    public User findUserById(Long userId) {
-        return userMapper.findById(userId);
-    }
-
-    public User findUserByUsername(String username) {
-        return userMapper.findByUsername(username);
-    }
-
-    public void updateUser(User user) {
-        userMapper.updateUser(user);
-    }
-
-    public void deleteUser(Long userId) {
-        userMapper.deleteUser(userId);
-    }
 }

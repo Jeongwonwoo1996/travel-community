@@ -1,29 +1,134 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Login</title>
+  <title>로그인</title>
+  <style>
+    /* 기본 폰트와 배경 색상 */
+    body {
+      font-family: "Apple SD Gothic Neo", sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      /* 부드러운 그라디언트 배경 */
+      background: linear-gradient(to right, #74b9ff, #a29bfe);
+    }
+
+    /* 로그인 컨테이너 스타일 */
+    .form-container {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* 제목 */
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.8em;
+    }
+
+    /* 라벨 스타일 */
+    .form-container label {
+      font-weight: 600;
+      margin-top: 15px;
+      display: block;
+    }
+
+    /* 이메일, 비밀번호 입력 필드 */
+    .form-container input[type="email"],
+    .form-container input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 0.9em;
+    }
+
+    /* 로그인 버튼 */
+    .form-container button {
+      width: 100%;
+      padding: 14px 0;
+      margin-top: 20px;
+      background-color: #0984e3;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .form-container button:hover {
+      background-color: #74b9ff; /* 호버 시 색상 변경 */
+    }
+
+    /* 회원가입 링크 */
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .register-link a {
+      color: #0984e3;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* 메시지 영역 (성공/실패 등) */
+    .message {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    /* 성공/실패 메시지를 좀 더 눈에 띄게 */
+    .message.success {
+      color: #2ecc71;
+      font-weight: 600;
+    }
+    .message.error {
+      color: #e74c3c;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-<h1>Login</h1>
+<div class="form-container">
+  <h1>로그인</h1>
 
-<!-- 성공 메시지 -->
-<div th:if="${param.success}">
-  <p style="color: green;">Login successful! Welcome back!</p>
+  <!-- 로그인 성공 메시지 -->
+  <div th:if="${param.success}" class="message success">
+    <p>로그인에 성공했습니다! 잠시 후 페이지가 이동합니다...</p>
+  </div>
+
+  <!-- 로그인 실패 메시지 -->
+  <div th:if="${param.error}" class="message error">
+    <p>이메일 또는 비밀번호가 올바르지 않습니다.</p>
+  </div>
+
+  <!-- 폼: 이메일, 비밀번호 입력 후 서버로 전송 -->
+  <form th:action="@{/login/submit}" method="post">
+    <label for="email">이메일</label>
+    <input type="email" id="email" name="email" placeholder="example@domain.com" required>
+
+    <label for="password">비밀번호</label>
+    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+
+    <button type="submit">로그인</button>
+  </form>
+
+  <!-- 회원가입 링크 -->
+  <div class="register-link">
+    <p>아직 계정이 없으신가요? <a th:href="@{/register}">회원가입하기</a></p>
+  </div>
 </div>
-
-<!-- 실패 메시지 -->
-<div th:if="${param.error}">
-  <p style="color: red;">Invalid email or password</p>
-</div>
-
-<form th:action="@{/login}" method="post">
-  <label>Email:</label>
-  <input type="email" name="username" required>
-  <br>
-  <label>Password:</label>
-  <input type="password" name="password" required>
-  <br>
-  <button type="submit">Login</button>
-</form>
 </body>
 </html>
