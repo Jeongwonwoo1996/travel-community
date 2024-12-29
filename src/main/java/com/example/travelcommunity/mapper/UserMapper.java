@@ -2,6 +2,7 @@ package com.example.travelcommunity.mapper;
 
 import com.example.travelcommunity.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper {
@@ -12,4 +13,9 @@ public interface UserMapper {
     User findByUsername(String username); // 사용자 이름으로 조회
     void updateUser(User user); // 회원 정보 수정
     void deleteUser(Long userId); // 회원 삭제
+
+    Long findUserIdByEmail(String email);
+
+    String findUsernameById(Long userId);
+
 }

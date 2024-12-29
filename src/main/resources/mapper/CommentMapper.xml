@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.travelcommunity.mapper.CommentMapper">
+
+    <!-- 댓글 생성 -->
+    <insert id="insertComment" parameterType="com.example.travelcommunity.entity.Comment">
+        INSERT INTO comments (post_id, user_id, parent_comment_id, content, created_by, created_at)
+        VALUES (#{postId}, #{userId}, #{parentCommentId}, #{content}, #{createdBy}, NOW())
+    </insert>
+
+    <select id="selectCommentsByPostId" resultType="com.example.travelcommunity.entity.Comment">
+        SELECT c.comment_id, c.post_id, c.user_id, c.content, c.is_deleted, c.created_at, u.username AS author
+        FROM comments c
+                 JOIN users u ON c.user_id = u.user_id
+        WHERE c.post_id = #{postId}
+        ORDER BY c.created_at ASC
+    </select>
+    <!-- 댓글 상세 조회 -->
+    <select id="selectCommentById" parameterType="long" resultType="com.example.travelcommunity.entity.Comment">
+        SELECT c.*, u.username AS author
+        FROM comments c
+                 JOIN users u ON c.user_id = u.user_id
+        WHERE c.comment_id = #{commentId}
+    </select>
+
+    <!-- 댓글 삭제 (논리 삭제) -->
+    <update id="deleteComment" parameterType="long">
+        UPDATE comments
+        SET is_deleted = TRUE
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="com.example.travelcommunity.entity.Comment">
+        UPDATE comments
+        SET content = #{content}, updated_at = NOW()
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 댓글 좋아요 증가 -->
+    <update id="incrementLikeCount" parameterType="long">
+        UPDATE comments
+        SET likes_count = likes_count + 1
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 댓글 좋아요 감소 -->
+    <update id="decrementLikeCount" parameterType="long">
+        UPDATE comments
+        SET likes_count = likes_count - 1
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 댓글 페이징 조회 -->
+    <select id="selectCommentsWithPaging" parameterType="map" resultType="com.example.travelcommunity.entity.Comment">
+        SELECT c.*, u.username AS author
+        FROM comments c
+                 JOIN users u ON c.user_id = u.user_id
+        WHERE c.post_id = #{postId} AND c.is_deleted = FALSE
+        ORDER BY c.created_at ASC
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 특정 게시글의 댓글 개수 -->
+    <select id="countCommentsByPostId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM comments
+        WHERE post_id = #{postId} AND is_deleted = FALSE
+    </select>
+</mapper>

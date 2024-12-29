@@ -1,0 +1,130 @@
+/* common.css */
+
+/* 전체 배경 및 폰트 설정 */
+body {
+    font-family: "Apple SD Gothic Neo", sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    /* 그라디언트 배경 */
+    background: linear-gradient(to right, #74b9ff, #a29bfe);
+    display: flex;
+    flex-direction: column; /* 헤더 + 메인 + 푸터 순서 */
+}
+
+/* 헤더 스타일 */
+.site-header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.site-header .logo {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: #2d3436;
+}
+.site-header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+.site-header nav li a {
+    text-decoration: none;
+    color: #0984e3;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: color 0.2s ease;
+}
+.site-header nav li a:hover {
+    color: #6c5ce7;
+}
+
+/* 메인 컨텐츠 컨테이너 */
+main {
+    flex: 1; /* 나머지 공간 차지 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+}
+
+/* Welcome 컨테이너 (index.html) */
+.welcome-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.welcome-container h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    color: #2d3436;
+}
+.welcome-container p {
+    font-size: 1em;
+    color: #636e72;
+    line-height: 1.4;
+}
+
+/* 카드 섹션 */
+.card-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1000px;
+    width: 100%;
+}
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #2d3436;
+}
+.card p {
+    font-size: 0.95em;
+    color: #636e72;
+    line-height: 1.4;
+}
+
+/* 푸터 스타일 */
+.site-footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #ffffff;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
+}
+.site-footer p {
+    margin: 0;
+    font-size: 0.85em;
+    color: #636e72;
+}
+
+/* 반응형 (예시) */
+@media (max-width: 768px) {
+    .welcome-container {
+        margin-bottom: 20px;
+    }
+    .card {
+        width: 100%;
+        margin: 0 20px 20px 20px;
+    }
+}

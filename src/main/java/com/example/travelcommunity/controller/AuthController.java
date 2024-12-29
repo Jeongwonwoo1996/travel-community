@@ -4,34 +4,21 @@ import com.example.travelcommunity.dto.UserRequestDto;
 import com.example.travelcommunity.entity.User;
 import com.example.travelcommunity.mapper.converter.UserConverter;
 import com.example.travelcommunity.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthController {
 
     private final UserService userService;
     private final UserConverter userConverter;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService, UserConverter userConverter, PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService, UserConverter userConverter) {
         this.userService = userService;
         this.userConverter = userConverter;
-        this.passwordEncoder = passwordEncoder;
     }
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -41,34 +28,21 @@ public class AuthController {
         return "login";
     }
 
-//    @PostMapping("/login/submit")
-//    public String processLogin(@RequestParam("email") String email,
-//                               @RequestParam("password") String password,
-//                               HttpServletRequest request,
-//                               Model model) {
-//        log.info("Attempting login with email: {}", email);
-//
-//        try {
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(email, password)
-//            );
-//
-//            log.info("Login successful for email: {}", email);
-//
-//            HttpSession session = request.getSession();
-//            session.setAttribute("username", authentication.getName());
-//
-//            return "redirect:/?success=true";
-//        } catch (BadCredentialsException e) {
-//            log.warn("Login failed for email: {}. Invalid credentials.", email);
-//            model.addAttribute("error", "Invalid email or password");
-//            return "login";
-//        } catch (Exception e) {
-//            log.error("Login failed for email: {}. Error: {}", email, e.getMessage());
-//            model.addAttribute("error", "Authentication failed");
-//            return "login";
-//        }
-//    }
+    @PostMapping("/login")
+    public String processLogin(@RequestParam("email") String email,
+                               @RequestParam("password") String password,
+                               Model model) {
+        try {
+            User user = userService.login(email, password); // UserService에서 로그인 처리
+            model.addAttribute("user", user); // 성공 시 사용자 정보 추가
+            return "index"; // 성공 시 대시보드로 이동
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage()); // 실패 시 에러 메시지 추가
+            return "login"; // 실패 시 로그인 페이지 유지
+        }
+    }
+
+
 
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
@@ -77,22 +51,21 @@ public class AuthController {
     }
 
     // 회원가입 처리 POST
+// 회원가입 처리
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") UserRequestDto userRequestDto) {
-        // 1) DTO → Entity 변환
-        User user = userConverter.toEntity(userRequestDto);
-
-        // 2) 비밀번호 암호화
-        String rawPassword = user.getPassword();
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-        user.setPassword(encodedPassword);
-
-        // 3) 회원가입 Service 호출
-        userService.registerUser(user);
-
-        // 회원가입 완료 후 로그인 페이지로 리다이렉트
-        return "redirect:/login?registered=true";
-
-
+    public String registerUser(@ModelAttribute("user") UserRequestDto userRequestDto, Model model) {
+        try {
+            userService.registerUser(userConverter.toEntity(userRequestDto)); // 서비스에 로직 위임
+            log.info("User registered successfully: {}", userRequestDto.getEmail());
+            return "redirect:/auth/login?registered=true";
+        } catch (IllegalArgumentException e) {
+            log.warn("Registration failed: {}", e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            return "register";
+        } catch (Exception e) {
+            log.error("Unexpected error during registration", e);
+            model.addAttribute("error", "회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+            return "register";
+        }
     }
 }

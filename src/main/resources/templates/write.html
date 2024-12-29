@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Travel Community - 글 작성/수정</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
+    <style>
+        .form-container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            margin: 40px auto;
+        }
+        .form-container .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        .form-container .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1em;
+            color: #2d3436;
+        }
+        .form-container .form-group input[type="text"],
+        .form-container .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .form-container textarea {
+            resize: vertical;
+        }
+        .form-container button {
+            padding: 12px 20px;
+            background-color: #0984e3;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+            display: block;
+            margin: 0 auto;
+        }
+        .form-container button:hover {
+            background-color: #74b9ff;
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="logo">Travel Community</div>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/board}">게시판</a></li>
+            <li><a th:href="@{/schedule}">여행 일정</a></li>
+            <li><a th:href="@{/profile}">Profile</a></li>
+            <li><a th:href="@{/trips}">My Trips</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="welcome-container">
+        <h2 th:text="${isEdit} ? '글 수정' : '글 작성'">글 작성</h2>
+        <p th:text="${isEdit} ? '게시글을 수정하세요.' : '새로운 게시글을 작성하세요.'">새로운 게시글을 작성하세요.</p>
+    </div>
+
+    <div class="form-container">
+        <form th:action="${isEdit} ? @{/board/update/{postId}(postId=${post.postId})} : @{/board/create}" method="post">
+            <!-- 제목 -->
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" th:value="${post?.title}" placeholder="제목을 입력하세요" required />
+            </div>
+
+            <!-- 내용 -->
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" rows="8" placeholder="내용을 입력하세요" th:text="${post?.content}" required></textarea>
+            </div>
+
+            <!-- 버튼 -->
+            <button type="submit" th:text="${isEdit} ? '수정 완료' : '작성'">작성</button>
+        </form>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <p>&copy; 2023 Travel Community. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

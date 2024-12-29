@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Travel Community - 게시판</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}" />
+
+  <style>
+    .board-table {
+      background: #fff;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-collapse: collapse;
+      overflow: hidden;
+    }
+    .board-table th, .board-table td {
+      padding: 15px;
+      text-align: left;
+      font-size: 1em;
+    }
+    .board-table th {
+      background-color: #f2f2f2;
+      color: #2d3436;
+      font-weight: 600;
+    }
+    .board-table tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+    .board-table a {
+      color: #0984e3;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .board-table a:hover {
+      text-decoration: underline;
+    }
+    .btn-write {
+      display: block;
+      width: 200px;
+      padding: 10px;
+      margin: 20px auto;
+      text-align: center;
+      background-color: #0984e3;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .btn-write:hover {
+      background-color: #74b9ff;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+      margin: 20px auto;
+    }
+    .pagination li {
+      margin: 0 5px;
+    }
+    .pagination a {
+      display: block;
+      padding: 8px 12px;
+      text-decoration: none;
+      background-color: #0984e3;
+      color: white;
+      border-radius: 5px;
+      font-weight: 600;
+    }
+    .pagination a:hover {
+      background-color: #74b9ff;
+    }
+    .pagination .active a {
+      background-color: #74b9ff;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">Travel Community</div>
+  <nav>
+    <ul>
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/board}">게시판</a></li>
+      <li><a th:href="@{/schedule}">여행 일정</a></li>
+      <li><a th:href="@{/profile}">Profile</a></li>
+      <li><a th:href="@{/trips}">My Trips</a></li>
+      <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="welcome-container">
+    <h2>게시판</h2>
+    <p>자유롭게 소통하고, 유익한 정보를 공유해보세요.</p>
+  </div>
+
+  <a href="/board/write" class="btn-write">글 작성</a>
+
+  <table class="board-table">
+    <thead>
+    <tr>
+      <th>카테고리</th>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>날짜</th>
+      <th>좋아요</th>
+      <th>조회수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+      <td th:text="${post.categoryName}">카테고리</td>
+      <td th:text="${post.postId}"></td>
+      <td>
+        <a th:href="@{/board/{id}(id=${post.postId})}" th:text="${post.title}"></a>
+      </td>
+      <td th:text="${post.author}"></td>
+      <td th:text="${post.formattedCreatedAt}"></td>
+      <td th:text="${post.likesCount}">0</td>
+      <td th:text="${post.viewsCount}">0</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ul class="pagination">
+    <li th:if="${currentPage > 1}">
+      <a th:href="@{/board(page=${currentPage - 1}, pageSize=${pageSize})}">&laquo; 이전</a>
+    </li>
+    <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+        th:classappend="${i == currentPage} ? 'active'">
+      <a th:href="@{/board(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
+    </li>
+    <li th:if="${currentPage < totalPages}">
+      <a th:href="@{/board(page=${currentPage + 1}, pageSize=${pageSize})}">다음 &raquo;</a>
+    </li>
+  </ul>
+</main>
+
+<footer class="site-footer">
+  <p>&copy; 2023 Travel Community. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,12 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>Travel Community - 메인 페이지</title>
+    <!-- 공통 CSS 로드 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}" />
 </head>
 <body>
-<div>
-    <h2>Welcome to Travel Community</h2>
-    <p>Explore and share your travel plans!</p>
-</div>
+
+<!-- 상단 헤더 -->
+<header class="site-header">
+    <div class="logo">Travel Community</div>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/board}">게시판</a></li>
+            <li><a th:href="@{/schedule}">여행 일정</a></li>
+            <li><a th:href="@{/profile}">Profile</a></li>
+            <li><a th:href="@{/trips}">My Trips</a></li>
+            <li><a th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- 메인 컨텐츠 -->
+<main>
+    <!-- Welcome 박스 -->
+    <div class="welcome-container">
+        <h2>Welcome to Travel Community</h2>
+        <p>Explore and share your travel plans!<br>
+            전 세계 여행자들과 함께 새로운 경험을 나누어 보세요.
+        </p>
+    </div>
+
+    <!-- 여행 커뮤니티 목적에 맞는 카드 레이아웃 -->
+    <div class="card-section">
+        <div class="card">
+            <h3>나만의 여행기</h3>
+            <p>새로운 여행지에서의 추억과 스토리를 공유해보세요.</p>
+        </div>
+        <div class="card">
+            <h3>추천 여행지</h3>
+            <p>멋진 풍경, 맛있는 음식, 숨겨진 명소까지<br>다양한 정보를 함께 찾아봅시다.</p>
+        </div>
+        <div class="card">
+            <h3>계획 세우기</h3>
+            <p>혼자 혹은 함께 여행할 때 필요한 일정과 예산 계획을<br>쉽게 작성하고 관리해보세요.</p>
+        </div>
+    </div>
+</main>
+
+<!-- 하단 푸터 -->
+<footer class="site-footer">
+    <p>&copy; 2023 Travel Community. All rights reserved.</p>
+</footer>
+
 </body>
 </html>

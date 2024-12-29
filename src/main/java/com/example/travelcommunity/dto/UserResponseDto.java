@@ -5,8 +5,10 @@ package com.example.travelcommunity.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,9 +21,9 @@ public class UserResponseDto {
     private String role;
     private String grade;
     private String profileVisibility;
-    private LocalDate dateOfBirth;
-    private Timestamp lastLogin;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Date dateOfBirth;
+    private LocalDateTime lastLogin;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

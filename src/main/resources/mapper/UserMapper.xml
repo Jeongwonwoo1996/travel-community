@@ -3,8 +3,7 @@
 
 <mapper namespace="com.example.travelcommunity.mapper.UserMapper">
 
-    <!-- 회원 등록 -->
-    <insert id="insertUser" parameterType="com.example.travelcommunity.entity.User">
+    <insert id="insertUser" parameterType="com.example.travelcommunity.dto.UserRequestDto">
         INSERT INTO users (
             username,
             email,
@@ -14,7 +13,8 @@
             gender,
             country,
             preferred_language,
-            travel_interests
+            travel_interests,
+            created_by
         ) VALUES (
                      #{username},
                      #{email},
@@ -24,7 +24,8 @@
                      #{gender},
                      #{country},
                      #{preferredLanguage},
-                     #{travelInterests}
+                     #{travelInterests},
+                     1
                  )
     </insert>
 
@@ -68,8 +69,22 @@
     </delete>
 
     <!-- 이메일로 사용자 조회 -->
-    <select id="findByEmail" parameterType="string" resultType="com.example.travelcommunity.entity.User">
-        SELECT * FROM users WHERE email = #{email}
+    <select id="findByEmail" parameterType="String" resultType="com.example.travelcommunity.entity.User">
+        SELECT *
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <select id="findUserIdByEmail" parameterType="String" resultType="Long">
+        SELECT user_id
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <select id="findUsernameById" parameterType="long" resultType="string">
+        SELECT username
+        FROM users
+        WHERE user_id = #{userId}
     </select>
 
 </mapper>
